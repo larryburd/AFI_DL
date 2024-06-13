@@ -22,6 +22,7 @@ soup = BeautifulSoup(html, 'html.parser')
 # list to hold all pdf links found
 pdf_links = []
 
+#TODO: Find out how to have selenium navigate through the pages of AFIs
 # Find all a tags that have .pdf as an extension
 for link in soup.find_all('a'):
   href = link.get('href')
