@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from time import sleep
 import os
 import sys
 
@@ -60,8 +59,6 @@ def getLinks(html):
   # Parse the HTML using BeautifulSoup
   soup = BeautifulSoup(html, 'html.parser')
 
-  #TODO: Find out how to have selenium navigate through the pages of AFIs
-  #Anchor tag for changing pages: id="data_next"
   # Find all a tags that have .pdf as an extension
   for link in soup.find_all('a'):
     href = link.get('href')
@@ -85,12 +82,6 @@ def downloadPDFs(pdf_links, outputDir, url):
     pdf_file = requests.get(url + pdf_link)
     with open(os.path.join(outputDir, os.path.basename(pdf_link)), 'wb') as f:
       f.write(pdf_file.content)
-
-# Helper function to download the html as a file to be reviewed
-def saveHTML(html):
-  with open('./sitehtml.html', 'w') as f:
-    print(html, file=f)
-      
 
 if __name__ == "__main__":
   main()
