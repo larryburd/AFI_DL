@@ -20,12 +20,6 @@ def main():
   #with Chrome(options=chrome_options) as browser:
   with Chrome() as browser:
     browser.get(url)
-
-    # Get the first page of pdfs
-    # html = browser.page_source
-    # links = getLinks(html)
-    # downloadPDFs(links, outputDir, url)
-
     pageButtons = browser.find_elements(By.CLASS_NAME, "paginate_button")
     
     # Get the pdfs in pages 1 - 5
@@ -33,21 +27,27 @@ def main():
       html = browser.page_source
       links = getLinks(html)
       downloadPDFs(links, outputDir, url) 
-      print('i equals ', i)
+      currentPage = browser.find_element(By.CSS_SELECTOR, ".paginate_button.current")
+      print('Current Page: ', currentPage.text)
       pageButtons[i].click() 
       pageButtons = browser.find_elements(By.CLASS_NAME, "paginate_button")
 
+    nextPageIndex = 4
     # Continue to click the 4th paginate button until we get all 180 pages
     while True:
       html = browser.page_source
       links = getLinks(html)
       downloadPDFs(links, outputDir, url)
-      print('Page Button Text: ', pageButtons[4].text)
-      sleep(.5)
-      pageButtons[4].click() 
+      currentPage = browser.find_element(By.CSS_SELECTOR, ".paginate_button.current")
+      print('Current Page: ', currentPage.text)
+
+      if int(currentPage.text) >= 177:
+        nextPageIndex += 1
+      elif int(currentPage.text) == 179:
+        break
+
+      pageButtons[nextPageIndex].click() 
       pageButtons = browser.find_elements(By.CLASS_NAME, "paginate_button")
-      if pageButtons[4].text == '180':
-        break;
 
 def printList(list):
   for item in list:
